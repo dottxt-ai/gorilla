@@ -9,3 +9,7 @@ anthropic
 openai
 numpy
 cohere~=5.2.5
+outlines
+modal
+transformers
+mistral_inference

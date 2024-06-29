@@ -586,3 +586,97 @@ def _convert_value(value, type_str):
         return type_class(value)
     except ValueError:
         return value
+
+#####
+# Putting function calling stuff here for now.
+
+from outlines.fsm.json_schema import (
+    STRING_INNER,
+    INTEGER,
+    # NUMBER,
+    BOOLEAN,
+    NULL,
+    WHITESPACE, #I'm just using space... but should probaly update
+)
+
+#required to have a decimal value..
+#let's test just this one.
+NUMBER = rf"({INTEGER})(\.[0-9]+)([eE][+-][0-9]+)?"
+
+import re
+
+def build_dict_regex(props):
+    out_re = r'\{'
+    args_part  = ", ".join([
+        f'"{prop}": '+type_to_regex(props[prop])
+        for prop in props
+    ])
+    return out_re+args_part+r"\}"
+
+# this should be more universal
+def type_to_regex(arg_meta):
+    basic_map = {
+        "string": f'"{STRING_INNER}{{1,42}}"', # might need to be longer?
+        "integer": INTEGER,
+        "number": NUMBER,
+        "float": NUMBER, # change this later
+        "boolean": BOOLEAN,
+        "null": NULL,
+    }
+    arg_type = arg_meta['type']
+    if arg_type == 'object':
+        arg_type = 'dict'
+    if arg_type == 'dict':
+        result = build_dict_regex(arg_meta['properties'])
+    # Note, this currently won't pass the empty list
+    elif arg_type == 'array':
+        pattern = type_to_regex(arg_meta['items'])
+        result = array_regex = r'\[('+pattern+', ){0,8}'+pattern+'\]'
+    else:
+        result = basic_map[arg_type]
+    return result
+
+# works only for "simple" functions
+# dot_replace is necessary for Mistral-7B-v0.3 FC
+def build_fc_regex(function_data, dot_replace=False):
+    if dot_replace:
+        out_re = r'\[\{"name": "' + function_data["name"].replace('.','_dot_') + '", "arguments": \{'
+    else:
+        out_re = r'\[\{"name": "' + function_data["name"] + '", "arguments": \{'        
+    args_part  = ", ".join([
+        f'"{arg}": '+type_to_regex(value)
+        for arg, value in _cast_to_openai_type(
+            function_data['parameters']['properties'], 
+            GORILLA_TO_OPENAPI, 
+            "simple").items()
+        # do any of the examples use the option parameter?
+        # Easy enough to add in!
+        if arg in function_data['parameters']['required']
+    ])
+    optional_part = "".join([
+        f'(, "{arg}": '+type_to_regex(value) + r')?'
+        for arg, value in _cast_to_openai_type(
+            function_data['parameters']['properties'], 
+            GORILLA_TO_OPENAPI, 
+            "simple").items()
+        if not (arg in function_data['parameters']['required'])
+    ])
+    return out_re+args_part+optional_part+"}}]"
+
+def build_standard_regex(function_data):
+    out_re = r'\['+function_data["name"]+"\("
+    
+    args_part  = ", ".join([
+         f'{arg}='+type_to_regex(function_data['parameters']['properties'][arg])
+         for arg in function_data['parameters']['properties']
+         # do any of the examples use the option parameter?
+         # Easy enough to add in!
+         if arg in function_data['parameters']['required']
+       
+    ])
+    optional_part = "".join([
+        f'(, {arg}='+type_to_regex(function_data['parameters']['properties'][arg]) + r')?'
+        for arg in function_data['parameters']['properties']
+        if not (arg in function_data['parameters']['required'])
+    ])
+    return out_re + args_part+optional_part + r'\)]'

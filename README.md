@@ -1,156 +1,21 @@
-# Gorilla: Large Language Model Connected with Massive APIs [[Project Website](https://shishirpatil.github.io/gorilla/)]
+# Structured Generation with the Gorilla/Berkley Function Calling Leaderboard
+<img src="./logo.png" width=25% height=25%>
 
+This fork of the Gorilla/Berkeley Function Call Leaderboard (BFCL) is to reproduce the internal results published by the [.txt](https://dottxt.co/) team showing that structured generation with Outlines can outperform the best GPT-4 models on the `simple` test set for the BFCL.
 
-<img src="https://github.com/ShishirPatil/gorilla/blob/gh-pages/assets/img/logo.png" width=50% height=50%>
+This repo will allow you to reproduce the result visulized in the figure below:
 
-**🚒  GoEx: A Runtime for executing LLM generated actions like code & API calls** GoEx presents “undo” and “damage confinement” abstractions for mitigating the risk of unintended actions taken in LLM-powered systems. [Release blog](https://gorilla.cs.berkeley.edu/blogs/10_gorilla_exec_engine.html) [Paper](https://arxiv.org/abs/2404.06921).
+<img src="./notebooks/figures/results.png">
 
-**🎉 Berkeley Function Calling Leaderboard** How do models stack up for function calling? :dart: Releasing the [Berkeley Function Calling Leaderboard](https://gorilla.cs.berkeley.edu/leaderboard). Read more in our [Release Blog](https://gorilla.cs.berkeley.edu/blogs/8_berkeley_function_calling_leaderboard.html). 
+This README contains detailed instruction for both re-running all of the evaluations from scrath as well as simply exploring the data generated during these evaluations to better understand the results.
 
-**:trophy: Gorilla OpenFunctions v2** Sets new SoTA for open-source LLMs :muscle: On-par with GPT-4 :raised_hands: Supports more languages :ok_hand: [Blog](https://gorilla.cs.berkeley.edu/blogs/7_open_functions_v2.html). 
+## Thanks!
 
-**:fire: Gorilla OpenFunctions** is a drop-in alternative for function calling! [Release Blog](https://gorilla.cs.berkeley.edu/blogs/4_open_functions.html)
+First things first: Open source isn't possible without active and supporting community. This work is no exception. Two major shout outs are in order before we go on:
 
-**🟢 Gorilla is Apache 2.0** With Gorilla being fine-tuned on MPT, and Falcon, you can use Gorilla commercially with no obligations! :golf:  
+1. These structured generation evaluations would not have been possible without the existing work of Outlines contributor and active community memeber Alonso Astroza ([@aastroza](https://github.com/aastroza)). Please take a moment to read through his original work on [Outlines Function Calling Evaluation](https://github.com/aastroza/structured-generation-benchmark/blob/main/reports/bfcl_outlines.md).
 
-**:rocket: Try Gorilla in 60s** [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1DEBPsccVLF_aUnmD0FwPeHFrtdC0QIUP?usp=sharing) 
-
-:computer: Use [Gorilla in your CLI](https://github.com/gorilla-llm/gorilla-cli) with `pip install gorilla-cli`
-
-**:fax: Checkout our [blogs](https://gorilla.cs.berkeley.edu/blog.html) for all things tools-use/function-calling!** 
-
-**:newspaper_roll: Checkout our paper!** [![arXiv](https://img.shields.io/badge/arXiv-2305.15334-<COLOR>.svg?style=flat-square)](https://arxiv.org/abs/2305.15334)
-
-**:wave: Join our Discord!** [![Discord](https://img.shields.io/discord/1111172801899012102?label=Discord&logo=discord&logoColor=green&style=flat-square)](https://discord.gg/grXXvj9Whz)
-
-
-`Gorilla` enables LLMs to use tools by invoking APIs. Given a natural language query, Gorilla comes up with the semantically- and syntactically- correct API to invoke. With Gorilla, we are the first to demonstrate how to use LLMs to invoke 1,600+ (and growing) API calls accurately while reducing hallucination. We also release APIBench, the largest collection of APIs, curated and easy to be trained on! Join us, as we try to expand the largest API store and teach LLMs how to write them! Hop on our Discord, or open a PR, or email us if you would like to have your API incorporated as well.
-
-## News
-- ⏰: [04/01] Introducing cost and latency metrics into [Berkeley function calling leaderboard](https://gorilla.cs.berkeley.edu/leaderboard)!
-- :rocket: [03/15] RAFT: Adapting Language Model to Domain Specific RAG is live! [[MSFT-Meta blog](https://techcommunity.microsoft.com/t5/ai-ai-platform-blog/bg-p/AIPlatformBlog)] [[Berkeley Blog](https://gorilla.cs.berkeley.edu/blogs/9_raft.html)]
-- :trophy: [02/26] [Berkeley Function Calling Leaderboard](https://gorilla.cs.berkeley.edu/leaderboard) is live!
-- :dart: [02/25] [OpenFunctions v2](https://gorilla.cs.berkeley.edu/blogs/7_open_functions_v2.html) sets new SoTA for open-source LLMs!
-- :fire: [11/16] Excited to release [Gorilla OpenFunctions](https://gorilla.cs.berkeley.edu/blogs/4_open_functions.html)
-- 💻 [06/29] Released [gorilla-cli](https://github.com/gorilla-llm/gorilla-cli), LLMs for your CLI!
-- 🟢 [06/06] Released Commercially usable, Apache 2.0 licensed Gorilla models
-- :rocket: [05/30] Provided the [CLI interface](inference/README.md) to chat with Gorilla!
-- :rocket: [05/28] Released Torch Hub and TensorFlow Hub Models!
-- :rocket: [05/27] Released the first Gorilla model! [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1DEBPsccVLF_aUnmD0FwPeHFrtdC0QIUP?usp=sharing) or [:hugs:](https://huggingface.co/gorilla-llm/gorilla-7b-hf-delta-v0)!
-- :fire: [05/27] We released the APIZoo contribution guide for community API contributions!
-- :fire: [05/25] We release the APIBench dataset and the evaluation code of Gorilla!
-
-## Gorilla Gradio
-**Try Gorilla LLM models in [HF Spaces](https://huggingface.co/spaces/gorilla-llm/gorilla-demo/) or [![Gradio Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1ktnVWPJOgqTC9hLW8lJPVZszuIddMy7y?usp=sharing)**
-![gorilla_webUI_2](https://github.com/TanmayDoesAI/gorilla/assets/85993243/f30645bf-6798-4bd2-ac6e-6943840ae095)
-
-
-## Get Started 
-
-Inference: Run Gorilla locally [`inference/README.md`](inference/README.md)
-
-Evaluation: We have included prompts and responses for the APIBench with and without retrievers along with the Abstract Syntax Tree (AST) matching evaluation script at [evaluation](https://github.com/ShishirPatil/gorilla/tree/main/eval).
-
-## Repository Organization
-
-Our repository organization is shown below. 
-
-  - The `berkeley-function-call-leaderboard` folder contains scripts for evaluating function-calling ability of models.
-  - The `data` folder contains all the evaluation APIs `(APIBench)` and the community contributed APIs.
-  - The `eval` folder contains all our evaluation code as well as the Gorilla outputs.
-  - The `inference` folder contains all the inference code for running Gorilla locally.
-  - The `openfunctions` folder contains the inference code for the OpenFunctions model(s).
-
-For our dataset collections, all the 1640 API documentation is in `data/api`. We also include the `APIBench` dataset created by self-instruct in `data/apibench`. For evaluation, we convert this into a LLM-friendly chat format, and the questions are in `eval/eval-data/questions`, and the corresponding responses are in `eval/eval-data/responses`.  We have also included the evaluation scripts are in `eval/eval-scripts`. This would be entirely sufficient to train Gorilla yourself, and reproduce our results. Please see [evaluation](https://github.com/ShishirPatil/gorilla/tree/main/eval) for the details on how to use our evaluation pipeline.
-
-Additionally, we have released all the model weights. `gorilla-7b-hf-v0` lets you invoke over 925 Hugging Face APIs. Similarly, `gorilla-7b-tf-v0` and `gorilla-7b-th-v0` have 626 (exhaustive) Tensorflow v2, and 94 (exhaustive) Torch Hub APIs. `gorilla-mpt-7b-hf-v0` and `gorilla-falcon-7b-hf-v0` are Apache 2.0 licensed models (commercially usable) fine-tuned on MPT-7B and Falcon-7B respectively. We will release a model with all three combined with generic chat capability and community contributed APIs as soon as we can scale our serving infrastructure. You can run Gorilla locally from instructions in the `inference/` sub-directory, or we also provide a hosted Gorilla chat completion API (see Colab)! If you have any suggestions, or if you run into any issues please feel free to reach out to us either through Discord or email or raise a Github issue.
-
-```
-gorilla
-|-- berkeley-function-call-leaderboard (data and scripts to eval model's function-calling ability)
-├── data
-│   ├── api (TF/HF/TH APIs used in generating apibench)
-│   │   ├── {api_name}_api.jsonl
-│   ├── apibench (Evaluating LLM models) v-1.0
-│   │   ├── {api_name}_train.jsonl, {api_name}_eval.jsonl
-|   |── apizoo (Contributed by the community - evolving)
-│   |   ├── username1.json
-│   │   ├── username2.json
-│   │   ├── ...
-├── eval
-│   ├── README.md
-│   ├── get_llm_responses.py
-│   ├── eval-scripts
-│   │   ├── ast_eval_{api_name}.py
-│   ├── eval-data
-│   │   ├── questions
-│   │   │   ├── API name
-│   │   │   │   ├── questions_{api_name}_{eval_metric}.jsonl
-│   │   ├── responses
-│   │   │   ├── API name
-│   │   │   │   ├── responses_{api_name}_Gorilla_FT_{eval_metric}.jsonl
-│   │   │   │   ├── responses_{api_name}_Gorilla_RT_{eval_metric}.jsonl
-├── inference
-│   ├── README.md
-│   ├── serve
-│   │   ├── gorilla_cli.py
-│   │   ├── conv_template.py
-├── openfunctions
-|   ├── openfunctions-v1 (data and scripts for openfunctions-v0 and v1)
-|   ├── utils (parsing script for openfunctions-v2)
-|   ├── inference_* (openfunctions-v2 hosted/local inference code)
-
-```
-
-## Contributing Your API
-We aim to build an open-source, one-stop-shop for all APIs, LLMs can interact with! Any suggestions and contributions are welcome! Please see the details on [how to contribute](https://github.com/ShishirPatil/gorilla/tree/main/data/README.md). THIS WILL ALWAYS REMAIN OPEN SOURCE.
-
-
-## FAQ(s)
-
-1. I would like to use Gorilla commercially. Is there going to be a Apache 2.0 licensed version?
-
-Yes! We now have models that you can use commercially without any obligations.
-
-
-2. Can we use Gorilla with other tools like Langchain etc?
-
-Absolutely! You've highlighted a great aspect of our tools. Gorilla is  an  end-to-end model, specifically tailored to serve correct API calls (tools) without requiring any additional coding. It's designed to work as part of a wider ecosystem and can be flexibly integrated within agentic frameworks and other tools.
-
-Langchain, is a versatile developer tool. Its "agents" can efficiently swap in any LLM, Gorilla included, making it a highly adaptable solution for various needs.
-
-The beauty of these tools truly shines when they collaborate, complementing each other's strengths and capabilities to create an even more powerful and comprehensive solution. This is where your contribution can make a difference. We enthusiastically welcome any inputs to further refine and enhance these tools. 
-
-Check out our blog on [How to Use Gorilla: A Step-by-Step Walkthrough](https://gorilla.cs.berkeley.edu/blogs/5_how_to_gorilla.html) to see all the different ways you can integrate Gorilla in your projects.
-
-
-
-## Project Roadmap
-
-In the immediate future, we plan to release the following:
-
-- [ ] BFCL metrics to evaluate contamination 
-- [ ] BFCL systems metrics including cost and latency
-- [ ] BFCL update with "live" data and user-votes
-- [ ] Openfunctions-v3 model to support more languages and multi-turn capability 
-- [x] Berkeley Function Calling leaderboard (BFCL) for evaluating tool-calling/function-calling models [Feb 26, 2024]
-- [x] Openfunctions-v2 with more languages (Java, JS, Python), relevance detection [Feb 26, 2024]
-- [x] API Zoo Index for easy access to all APIs [Feb 16, 2024]
-- [x] Openfunctions-v1, Apache 2.0, with parallel and multiple function calling [Nov 16, 2023]
-- [x] Openfunctions-v0, Apache 2.0 function calling model [Nov 16, 2023]
-- [X] Release a commercially usable, Apache 2.0 licensed Gorilla model [Jun 5, 2023] 
-- [X] Release weights for all APIs from APIBench [May 28, 2023]
-- [X] Run Gorilla LLM locally [May 28, 2023]
-- [X] Release weights for HF model APIs [May 27, 2023]
-- [X] Hosted Gorilla LLM chat for HF model APIs [May 27, 2023]
-- [X] Opening up the APIZoo for contributions from community
-- [X] Dataset and Eval Code
-
-Propose a new task you would like to work on :star_struck:
-
-## Citation
-
-If you use Gorilla or APIBench, please cite our paper:
+2. This project is a *fork* of the original "Gorilla: Large Language Model Connected with Massive APIs" to experiment with function calling and structured generation. please see the original [Project Website](https://shishirpatil.github.io/gorilla/) for more detail. Here is the original citation for Gorillia/APIBench
 
 ```text
 @article{patil2023gorilla,
@@ -160,3 +25,178 @@ If you use Gorilla or APIBench, please cite our paper:
   journal={arXiv preprint arXiv:2305.15334},
 } 
 ```
+
+## Getting Started
+
+I have included all of the original data generated by these experiments so there is no explicit need to re-run everything in order to *inspect* the results of these runs. If inspecting the results is your main goal, please jump to the [Data section](#Data). 
+
+To reproduce all the results posted you'll need:
+
+- An account with [Modal](https://modal.com/), all of the open models are run through a modal endpoint.
+
+- [OpenAI](https://openai.com/) account with the `OPENAI_API_KEY` environmental variable set. This is required only if you want to evaluate the GPT models.
+
+- [Mistral](https://mistral.ai/) account with the `MISTRAL_API_KEY` environmental variable set. This is required only if you want to evaluate the proprietary Mistral models. (Mistral code coming soon!)
+
+### Install Dependencies
+
+Before generating the leaderboard statistics, you should install dependencies using the following command: 
+
+```bash
+    conda create -n BFCL python=3.10
+    conda activate BFCL
+    pip install -r requirements.txt # Inside ./berkeley-function-call-leaderboard
+    pip install vllm # If you have vLLM supported GPU(s) and want to run our evaluation data against self-hosted OSS models.
+```
+If you plan to evaluate on OSS models, we are using vLLM for inference and refer to https://github.com/vllm-project/vllm for detail. We recommend to inference on at least V100s, A100s, and latest GPUs that are supported by vLLM. 
+
+### Checker Setup (required for Java, JavaScript test categories)
+
+Note: This is from the original repo documentation, and while we will only be using 'simple' test category, you will get annoying errors if you don't follow these steps.
+
+We use `tree-sitter` to do the AST parsing for Java and JavaScript test categories. Thus, you need to install `tree-sitter`.
+
+The git clones need to be under the `/berkeley-function-call-leaderboard/eval_checker` folder.
+
+```bash
+cd ./eval_checker
+git clone https://github.com/tree-sitter/tree-sitter-java.git
+git clone https://github.com/tree-sitter/tree-sitter-javascript.git
+```
+
+Now, move back to `/berkeley-function-call-leaderboard` by `cd ..`, and create two symbolic links to the `tree-sitter-java` and `tree-sitter-javascript` directories. This is required to run `openfunctions_evaluation.py`.
+
+```
+ln -s eval_checker/tree-sitter-java tree-sitter-java
+ln -s eval_checker/tree-sitter-javascript tree-sitter-javascript
+```
+## Replicating the benchmark
+
+If you would like to rerun all the benchmarks from scratch here's the steps you need to follow:
+
+### Modal
+
+To start with we need to deploy two modal classes. One for doing structured generation on open models and the other for doing unstructured generation (still through Outlines).
+
+The modal files can be found in the `./modal` directory. To deploy these it's best to follow the documentation on [the Modal website](https://modal.com/docs/guide). You may also want to change the configuration in these as you should only need a single GPU (I have multple used from earlier testing with larger models).
+
+NOTE: Modal can take awhile to start up, so if it's stuck at 0% for quite a while that is normal. Additionally running the structured evals will take notably longer because we're recompiling the regex for each function with each run of the evals. In a production environment the regex would be compiled once and after that performance would on par with unstructured generation.
+
+### Remove old results
+
+I've included the results of the runs so that anyone interested in just exploring the data is free to. However if you want to re-run the benchmarks you'll need to remove these first. You can empty them all or simply remove a specific directories. In the `berkeley-funtion-call-leaderboard/result/` directory run the following command to remove an individual model:
+
+```bash
+rm -rf phi3-med4k-outlines
+```
+
+If existing result data is present when you run the evaluation, it will simply use the existing data rather than re-running everything from scratch.
+
+### Run
+
+To run the evaluations you need to go to the `berkeley-funtion-call-leaderboard` directory and run the following command:
+
+```bash
+python ./openfunctions_evaluation.py --model "phi3-med4k-outlines" --test simple
+```
+
+You can substitue `phi3-med4k-outlines` for the model of your choice found in `berkeley-function-call-leaderboard/model_handler/handler_map.py`
+
+Reminder: This will be slower for the structured generation examples, only because it has to compile the regex structure into a FSM for each function call. Typically these would be cached and the performance difference would be negligable.
+
+As this model runs if will store the outcome in the `berkeley-function-call-leaderboard/results/<MODEL_NAME>` folder.
+
+### Evaluate
+
+After you have run the model you then need to run the evaluation seperately. To do this go to the the `berkeley-function-call-leaderboard/eval_checker` directory and run the `eval_runner.py` command like so:
+
+```bash
+cd eval_checker
+python ./openfunctions_evaluation.py --model "phi3-med4k-outlines" --test simple
+```
+
+This will display the score the model achieved as well as update data in the `berkeley-function-call-leaderboard/score` folder.
+
+## Data
+
+Now that everything is run we have a bunch of data we can explore to better understand what's happened. I've included all the initial data in this fork so that if you don't have the time or resources to rerun the full experiment you can still have fun exploring the outcomes. The following files/directories in the `/berkeley-function-call-leaderboard/` folder are helpful:
+
+- `data/gorilla_openfunctions_v1_test_simple.json` has the questions the model will be evaluated on.
+- `data/possible_answer/gorilla_openfunctions_v1_test_simple.json` has the possible acceptable answers.
+- `result/<MODEL_NAME>/gorilla_openfunctions_v1_test_simple_result.json` has answers that were provided by a given model.
+- `score/data.csv` has the leader-board results.
+- `score/<MODEL_NAME>/simple_score.json` contains details about which questions the model got wrong and why.
+
+
+In the `notebooks` directory you will also find a `visualize_scores.ipynb` file that will do a simple plot of all the results.
+
+## Error Analysis
+
+I have added a simple simple notebook in `notebooks/error_analysis.ipynb` that serves as a starting point for simply loading the data and exploring the cases where GPT-4 was wrong and Phi-3 + .txt/Outlines was correct. It should be relatively straightfoward to explore on your own with this as a starting point.
+
+There are a couple of interesting things worth pointing out.
+
+For some of the case *Phi-3-medium just performs better than GPT-4*. Here is one such example:
+
+```
+Question: Search for upcoming month rock concerts in New York.
+-------
+GPT-4 answer (incorrect): [event_finder.find_upcoming(location="New York, NY", genre="rock")]
+Phi-3 answer (correct): [event_finder.find_upcoming(location="New York, NY", genre="rock", days_ahead=30)]
+```
+
+In this case Phi-3 was able to correctly determine that it had to look ahead 30 days, an argument GPT-4 did not use.
+
+There are also some questionable cases. For example:
+
+```
+Question: Order three bottles of olive oil and a five pound bag of rice from Safeway in Palo Alto.
+-------
+GPT-4 answer (correct): [safeway.order(location="Palo Alto", items=["olive oil", "five pound bag of rice"], quantity=[3, 1])]
+Phi-3 answer (incorrect): [safeway.order(location='Palo Alto, CA', items=['olive oil', 'rice'], quantity=[3, 1])]
+```
+
+Is it really the case that GPT-4 is wrong? You'll find this cuts both ways when you look for cases that Phi-3 got wrong and GPT-4 got correct:
+
+```
+Question: What is the change in entropy in Joules per Kelvin of a 1kg ice block at 0°C if it is heated to 100°C under 1 atmosphere of pressure?
+-------
+GPT-4 answer (correct): [entropy_change.calculate(substance='ice', mass=1, initial_temperature=0, final_temperature=100)]
+Phi-3 answer (incorrect): [entropy_change.calculate(substance="water", mass=1, initial_temperature=0, final_temperature=100, pressure=1)]
+
+```
+
+I would argue in this case GPT-4 is wrong and Phi-3 is correct. However we're sticking to the rules in the original benchmark.
+
+Finally one *huge* advantage of structured generation which is worth calling out since some people may claim it is questionable: BCFL is *very* picky about how it wants floats handled. The value `1` is *not* and acceptable float, the result must have a decimal like `1.0`. Here is an example where this comes up:
+
+```
+Question: Calculate the average of list of integers [12, 15, 18, 20, 21, 26, 30].
+-------
+GPT-4 answer (incorrect): [calculate_average(numbers=[12, 15, 18, 20, 21, 26, 30])]
+Phi-3 answer (correct): [calculate_average(numbers=[12.0, 15.0, 18.0, 20.0, 21.0, 26.0, 30.0])]
+```
+
+Personally I think this is fair (though worth noting Phi-3 would *still* come out ahead if this was not the case) since there are times were very tiny details in format are huge. Maybe this function handles ints differently than floats? Using Structured generation means we can be *very* specific about how we want the format to be.
+
+## I want to try my own thing!
+
+If you want to experiment with your own variation on these experiments you need to follow these basic steps:
+
+- Add or modify a Modal handler in the `berkeley-function-call-leaderboard/model_handler` directory.
+
+- Add a key to your model name and handler to `berkeley-function-call-leaderboard/model_handler/handler_map.py`
+
+- Add metadata information to `berkeley-function-call-leaderboard/eval_checker/eval_runner_helper.py`
+
+After that you should be set to run your modal through the evaluation framework just like any other!
+
+## Keep up to date!
+
+The best places to keep up with what the .txt team is doing is to:
+
+- Subscribe to the [.txt blog](https://blog.dottxt.co/)
+
+- Follow us on [X/Twitter](https://x.com/dottxtai)
+
+- And please *star* and follow the [Outlines github repo](https://github.com/outlines-dev/outlines)

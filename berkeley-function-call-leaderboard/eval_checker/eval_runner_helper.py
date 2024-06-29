@@ -230,6 +230,30 @@ MODEL_METADATA_MAPPING = {
         "Mistral AI",
         "Proprietary",
     ],
+    "mistral7bV2":  [
+        "mistralai/Mistral-7B-Instruct-v0.2 (Prompt)",
+        "https://docs.mistral.ai/guides/model-selection/",
+        "Mistral AI",
+        "Apache 2.0",
+    ],
+    "mistral7bV2-outlines": [
+        "mistralai/Mistral-7B-Instruct-v0.2 (.txt)",
+        "https://docs.mistral.ai/guides/model-selection/",
+        "Mistral AI",
+        "Apache 2.0",
+    ],
+    "mistral7bV3": [
+        "mistralai/Mistral-7B-Instruct-v0.3 (FC)",
+        "https://docs.mistral.ai/guides/model-selection/",
+        "Mistral AI",
+        "Apache 2.0",
+    ],
+    "mistral7bV3-outlines": [
+        "mistralai/Mistral-7B-Instruct-v0.3 (.txt + FC)",
+        "https://docs.mistral.ai/guides/model-selection/",
+        "Mistral AI",
+        "Proprietary",
+    ],
     "Nexusflow-Raven-v2": [
         "Nexusflow-Raven-v2 (FC)",
         "https://huggingface.co/Nexusflow/NexusRaven-V2-13B",
@@ -349,6 +373,18 @@ MODEL_METADATA_MAPPING = {
         "https://huggingface.co/Snowflake/snowflake-arctic-instruct",
         "Snowflake",
         "apache-2.0",
+    ],
+    "phi3-med4k-outlines": [
+        "Microsoft/Phi-3-medium-4k-instruct (.txt + Prompt)",
+        "https://huggingface.co/microsoft/Phi-3-medium-4k-instruct",
+        "Microsoft",
+        "MIT",
+    ],
+    "phi3-med4k": [
+        "Microsoft/Phi-3-medium-4k-instruct (Prompt)",
+        "https://huggingface.co/microsoft/Phi-3-medium-4k-instruct",
+        "Microsoft",
+        "MIT",
     ]
 }
 

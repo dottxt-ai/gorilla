@@ -1,4 +1,4 @@
-from model_handler.claude_fc_handler import ClaudeFCHandler
+#from model_handler.claude_fc_handler import ClaudeFCHandler
 from model_handler.claude_prompt_handler import ClaudePromptingHandler
 from model_handler.databricks_handler import DatabricksHandler
 from model_handler.deepseek_handler import DeepseekHandler
@@ -16,6 +16,10 @@ from model_handler.nexus_handler import NexusHandler
 from model_handler.oss_handler import OSSHandler
 from model_handler.cohere_handler import CohereHandler
 from model_handler.arctic_handler import ArcticHandler
+from model_handler.generic_instruct_outlines_modal import GenericInstructOutlinesModalHandler
+from model_handler.generic_instruct_modal import GenericInstructModalHandler
+from model_handler.mistral_modal_handler import MistralModalHandler
+from model_handler.mistral_modal_outlines_handler import MistralModalOutlinesHandler
 
 handler_map = {
     "gorilla-openfunctions-v0": GorillaHandler,
@@ -35,11 +39,11 @@ handler_map = {
     "claude-2.1": ClaudePromptingHandler,
     "claude-instant-1.2": ClaudePromptingHandler,
     "claude-3-opus-20240229": ClaudePromptingHandler,
-    "claude-3-opus-20240229-FC": ClaudeFCHandler,
+    #"claude-3-opus-20240229-FC": ClaudeFCHandler,
     "claude-3-sonnet-20240229": ClaudePromptingHandler,
-    "claude-3-sonnet-20240229-FC": ClaudeFCHandler,
+    #"claude-3-sonnet-20240229-FC": ClaudeFCHandler,
     "claude-3-haiku-20240307": ClaudePromptingHandler,
-    "claude-3-haiku-20240307-FC": ClaudeFCHandler,
+    #"claude-3-haiku-20240307-FC": ClaudeFCHandler,
     "mistral-large-2402": MistralHandler,
     "mistral-large-2402-FC-Any": MistralHandler,
     "mistral-large-2402-FC-Auto": MistralHandler,
@@ -48,6 +52,10 @@ handler_map = {
     "mistral-small-2402-FC-Any": MistralHandler,
     "mistral-small-2402-FC-Auto": MistralHandler,
     "mistral-tiny-2312": MistralHandler,
+    "mistral7bV2": GenericInstructModalHandler,
+    "mistral7bV2-outlines": GenericInstructOutlinesModalHandler,
+    "mistral7bV3": MistralModalHandler,
+    "mistral7bV3-outlines": MistralModalOutlinesHandler,
     "fire-function-v1-FC": FireworkAIHandler,
     "Nexusflow-Raven-v2": NexusHandler,
     "gemini-1.0-pro": GeminiHandler,
@@ -71,4 +79,6 @@ handler_map = {
     "command-r-plus-FC-optimized": CohereHandler,
     "command-r-plus-optimized": CohereHandler,
     "snowflake/arctic": ArcticHandler,
+    "phi3-med4k-outlines": GenericInstructOutlinesModalHandler,
+    "phi3-med4k": GenericInstructModalHandler
 }
